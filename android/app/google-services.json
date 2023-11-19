@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "516526746191",
+    "project_id": "atelier4-saad-elbahi-iir5g5",
+    "storage_bucket": "atelier4-saad-elbahi-iir5g5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516526746191:android:011dcd2ba0c45eadbed83a",
+        "android_client_info": {
+          "package_name": "com.example.atelier4_s_elbahi_iir5g5"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1YQVCHt821VtKI4XB4HE57N51-_agEl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
