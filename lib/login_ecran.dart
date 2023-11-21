@@ -32,37 +32,7 @@ class LoginEcran extends StatelessWidget {
     );
   }
 }
-class LoginEcran extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return SignInScreen();
-          } else {
-            User? user = snapshot.data;
-            return Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Email: ${user?.email}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                    },
-                    child: Text('Se déconnecter'),
-                  ),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-}
+
 
 class SignInScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
