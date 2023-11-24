@@ -71,12 +71,6 @@ class SignInScreen extends StatelessWidget {
             ),
           ),
           TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              labelText: 'Email',
-            ),
-          ),
-          TextField(
             controller: passwordController,
             decoration: InputDecoration(
               labelText: 'Mot de passe',
