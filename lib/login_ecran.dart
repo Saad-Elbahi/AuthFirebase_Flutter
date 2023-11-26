@@ -1,90 +1,128 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class LoginEcran extends StatelessWidget {
+class LoginEcran extends StatefulWidget {
+  const LoginEcran({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return SignInScreen();
-          } else {
-            User? user = snapshot.data;
-            return Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Email: ${user?.email}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                    },
-                    child: Text('Se déconnecter'),
-                  ),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
+  State<LoginEcran> createState() => _LoginEcranState();
 }
 
+class _LoginEcranState extends State<LoginEcran> {
+  final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
-class SignInScreen extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  void login(BuildContext context) async {
+  signInWithEmailAndPassword() async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      setState(() {
+        isLoading = true;
+      });
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _email.text,
+        password: _password.text,
       );
-      // Connexion réussie, faire quelque chose si nécessaire
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('Utilisateur non trouvé');
-      } else if (e.code == 'wrong-password') {
-        print('Mot de passe incorrect');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login successful")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    } on FirebaseAuthException catch (user) {
+      setState(() {
+        isLoading = false;
+      });
+      if (user.code == 'user-not-found') {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No user found")),
+        );
+      } else {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Wrong password or email")),
+        );
       }
-    } catch (e) {
-      print('Erreur de connexion : $e');
+    } catch (excp) {
+      print('Unexpected error: $excp');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              labelText: 'Email',
+    return Scaffold(
+      body: Builder(
+        builder: (BuildContext scaffoldContext) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.person,
+                    size: 64,
+                    color: Color.fromARGB(255, 63, 181, 69),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Login ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Form(
+                    key: _formKey,
+                    child: OverflowBar(
+                      overflowSpacing: 20,
+                      children: [
+                        TextFormField(
+                          controller: _email,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Email is empty';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(labelText: "Email"),
+                        ),
+                        TextFormField(
+                          controller: _password,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Password is empty';
+                            }
+                            return null;
+                          },
+                          obscureText: true,
+                          decoration: const InputDecoration(labelText: "Password"),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                signInWithEmailAndPassword();
+                              }
+                            },
+                            child: isLoading
+                                ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Color.fromARGB(255, 63, 181, 144),
+                              ),
+                            )
+                                : const Text("Login"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          TextField(
-            controller: passwordController,
-            decoration: InputDecoration(
-              labelText: 'Mot de passe',
-            ),
-            obscureText: true,
-          ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              login(context);
-            },
-            child: Text('Se connecter'),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

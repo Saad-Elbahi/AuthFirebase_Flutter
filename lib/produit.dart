@@ -17,11 +17,11 @@ class Produit {
     required this.photo,
     required this.qte,
   });
- factory Produit.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+ factory Produit.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return Produit(
-      id: document.id,
+      id: doc.id,
       marque: data['marque'] ?? '',
       description: data['description'] ?? '',
       name: data['name'] ?? '',
