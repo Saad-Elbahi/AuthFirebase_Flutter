@@ -1,33 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Produit {
   String id;
-  String name;
-  String description;
   String marque;
+  String designation;
+  String categorie;
   double prix;
   String photo;
-  int qte;
+  int quantite;
 
   Produit({
     required this.id,
-    required this.name,
-    required this.description,
     required this.marque,
+    required this.designation,
+    required this.categorie,
     required this.prix,
     required this.photo,
-    required this.qte,
+    required this.quantite,
   });
- factory Produit.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
+  factory Produit.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map;
     return Produit(
       id: doc.id,
       marque: data['marque'] ?? '',
-      description: data['description'] ?? '',
-      name: data['name'] ?? '',
-      prix: (data['prix'] ?? 0).toDouble(),
+      designation: data['designation'] ?? '',
+      categorie: data['categorie'] ?? '',
+      prix: (data['prix'] ?? 0.0).toDouble(),
       photo: data['photo'] ?? '',
-      qte: data['quantite'] ?? 0,
+      quantite: data['quantite'] ?? 0,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'marque': marque,
+      'designation': designation,
+      'categorie': categorie,
+      'prix': prix,
+      'photo': photo,
+      'quantite': quantite,
+    };
   }
 }

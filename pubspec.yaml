@@ -38,11 +38,17 @@ dependencies:
   firebase_core: ^2.22.0
   firebase_auth: ^4.14.0
   firebase_ui_auth: ^1.10.0
+  firebase_storage: ^11.5.2
   cloud_firestore: ^4.13.1
+  image_picker: ^1.0.4
+  path: ^1.8.3
+  path_provider: ^2.0.8
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
