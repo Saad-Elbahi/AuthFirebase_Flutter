@@ -15,12 +15,12 @@ class LoginEcran extends StatelessWidget {
         if (!snapshot.hasData) {
           return SignInScreen();
         }
-        /*   return ProfileScreen(
+          return ProfileScreen(
           children: [
             Text("Email: ${snapshot.data!.email}"),
             Text("Nom: ${snapshot.data!.displayName ?? ''}")
           ],
-        );*/
+        );
         return AjoutProduitScreen();
       },
     );
