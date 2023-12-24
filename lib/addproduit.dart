@@ -1,11 +1,14 @@
 import 'dart:io';
-import 'package:atelier4_s_elbahi_iir5g5/produit.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'Produit.dart';
 
 class AjoutProduitScreen extends StatefulWidget {
   @override
@@ -23,27 +26,24 @@ class _AjoutProduitScreenState extends State<AjoutProduitScreen> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final CollectionReference _produitsCollection =
-      FirebaseFirestore.instance.collection('produits');
+  FirebaseFirestore.instance.collection('produits');
 
-  File? _image; // Variable pour stocker l'image sélectionnée
+  File? _image; // Variable to store the selected image
 
-  // Fonction pour sélectionner une photo depuis la galerie
+  // Function to pick a photo from the gallery
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-    String assetImagePath =
-        'assets/images/placeholder.jpg'; // Chemin de l'image par défaut
-    File im = await getImageFileFromAssets("assets/images/placeholder.jpg");
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    } else {
-      setState(() {
-        _image = im;
-      });
+    try {
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
     }
   }
 
@@ -66,11 +66,10 @@ class _AjoutProduitScreenState extends State<AjoutProduitScreen> {
       double prix = double.parse(_prixController.text);
       int quantite = int.parse(_quantiteController.text);
 
-      // Vérifiez si une image a été sélectionnée
-      if (_image != null) {
-        // Upload de la photo vers Cloud Storage
-        Reference storageReference =
-            _storage.ref().child(_image!.path.split('/').last);
+      // Check if an image has been selected
+      if (_image != null && _image!.existsSync()) {
+        // Upload the photo to Cloud Storage
+        Reference storageReference = _storage.ref().child(_image!.path.split('/').last);
         UploadTask uploadTask = storageReference.putFile(_image!);
         TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
         String photoUrl = await taskSnapshot.ref.getDownloadURL();
@@ -97,18 +96,31 @@ class _AjoutProduitScreenState extends State<AjoutProduitScreen> {
         _prixController.clear();
         _quantiteController.clear();
         setState(() {
-          _image = null; // Réinitialiser l'image après l'ajout du produit
+          _image = null; // Reset the image after adding the product
         });
       } else {
-        // Affichez un message d'erreur si aucune image n'a été sélectionnée
+        // Display an error message if no image is selected
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Veuillez sélectionner une photo')),
         );
       }
     } catch (e) {
-      print('Erreur lors de l\'ajout du produit : $e');
+      print('Error adding the product: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur lors de l\'ajout du produit')),
+      );
+    }
+  }
+
+  Widget _buildImageWidget() {
+    if (_image != null) {
+      return kIsWeb
+          ? Image.network(_image!.path) // Use Image.network for web
+          : Image.file(_image!); // Use Image.file for mobile
+    } else {
+      return Container(
+        height: 100,
+        color: Colors.grey,
       );
     }
   }
@@ -125,15 +137,10 @@ class _AjoutProduitScreenState extends State<AjoutProduitScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Afficher l'image sélectionnée ou un conteneur vide si aucune image n'a été sélectionnée
-              _image != null
-                  ? Image.file(_image!)
-                  : Container(
-                      height: 100,
-                      color: Colors
-                          .grey), // Vous pouvez personnaliser la hauteur et la couleur du conteneur
+              // Display the selected image or an empty container if no image is selected
+              _buildImageWidget(),
 
-              // Bouton pour sélectionner une photo
+              // Button to pick a photo
               ElevatedButton(
                 onPressed: _pickImage,
                 child: Text('Sélectionner une photo'),

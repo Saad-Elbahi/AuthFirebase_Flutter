@@ -1,10 +1,10 @@
-import 'package:atelier4_s_elbahi_iir5g5/produit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'Produit.dart';
 
-class ProduitDAO {
+class ProduitDao {
   final CollectionReference produitsCollection =
-      FirebaseFirestore.instance.collection('produits');
+  FirebaseFirestore.instance.collection('produits');
 
   // Insérer un produit dans Firestore
   Future<void> insertProduit(Produit produit) async {
@@ -25,10 +25,9 @@ class ProduitDAO {
   Stream<List<Produit>> getProduits() {
     return produitsCollection.snapshots().map(
           (snapshot) => snapshot.docs
-              .map(
-                (doc) => Produit.fromFirestore(doc),
-              )
-              .toList(),
-        );
-  }
-}
+          .map(
+            (doc) => Produit.fromFirestore(doc),
+      )
+          .toList(),
+    );
+  }}

@@ -23,9 +23,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -44,37 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCiNquimtiaGTqVTw8mgDVP-Zdg_UTthpI',
-    appId: '1:516526746191:web:79406c073d8dd31ebed83a',
-    messagingSenderId: '516526746191',
-    projectId: 'atelier4-saad-elbahi-iir5g5',
-    authDomain: 'atelier4-saad-elbahi-iir5g5.firebaseapp.com',
-    storageBucket: 'atelier4-saad-elbahi-iir5g5.appspot.com',
+    apiKey: 'AIzaSyCO-o_LAWpKx3yjPX31ZJ0U-Z0mMx4-Knk',
+    appId: '1:634598077200:web:75cf60c363fdbc82022b95',
+    messagingSenderId: '634598077200',
+    projectId: 'atelier4-a-charkaoui-iir-13b72',
+    authDomain: 'atelier4-a-charkaoui-iir-13b72.firebaseapp.com',
+    storageBucket: 'atelier4-a-charkaoui-iir-13b72.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB1YQVCHt821VtKI4XB4HE57N51-_agEl4',
-    appId: '1:516526746191:android:011dcd2ba0c45eadbed83a',
-    messagingSenderId: '516526746191',
-    projectId: 'atelier4-saad-elbahi-iir5g5',
-    storageBucket: 'atelier4-saad-elbahi-iir5g5.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC8C2bXxhaw7u6-IWJ0Dj8yj3CDOWLqL3o',
-    appId: '1:516526746191:ios:80a6a0526bce8851bed83a',
-    messagingSenderId: '516526746191',
-    projectId: 'atelier4-saad-elbahi-iir5g5',
-    storageBucket: 'atelier4-saad-elbahi-iir5g5.appspot.com',
-    iosBundleId: 'com.example.atelier4SElbahiIir5g5',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC8C2bXxhaw7u6-IWJ0Dj8yj3CDOWLqL3o',
-    appId: '1:516526746191:ios:8601c40feb27f4d1bed83a',
-    messagingSenderId: '516526746191',
-    projectId: 'atelier4-saad-elbahi-iir5g5',
-    storageBucket: 'atelier4-saad-elbahi-iir5g5.appspot.com',
-    iosBundleId: 'com.example.atelier4SElbahiIir5g5.RunnerTests',
+    apiKey: 'AIzaSyABw9S3nR1hdDi6rPjIFoZ69ZR_6F52jEE',
+    appId: '1:634598077200:android:6f74328223ea5c9d022b95',
+    messagingSenderId: '634598077200',
+    projectId: 'atelier4-a-charkaoui-iir-13b72',
+    storageBucket: 'atelier4-a-charkaoui-iir-13b72.appspot.com',
   );
 }
